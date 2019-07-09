@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <Directory>
+    <Base>D:\EHRI\</Base>
+    <Transfer>D:\EHRI\Transfer\</Transfer>
+    <Archive>D:\EHRI\Archive\</Archive>
+  </Directory>
+  <Database>
+    <Olu>Server=172.21.17.100;Database=olu;Uid=aortega;Pwd=Passw0rd@;</Olu>
+    <HRLinks>Server=172.21.17.100;Database=hrlinks;Uid=aortega;Pwd=Passw0rd@;</HRLinks>
+  </Database>
+</configuration>
