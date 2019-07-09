@@ -16,12 +16,12 @@ namespace EHRIProcessor.Engine
                 addFile(fileName);
         }
 
-        public void UpdateCount(string fileID, int processedCount)
+        public void UpdateCount(int processedCount)
         {
             using (oluContext db = new oluContext())
             {
                 var trainingRecord = db.TrainingFileInfo
-                                     .Single(t => t.TrainingFileInfoId == fileID);
+                                     .Single(t => t.TrainingFileInfoId == FileID);
 
                 trainingRecord.SavedRecordCount = processedCount;
 
@@ -36,10 +36,16 @@ namespace EHRIProcessor.Engine
             {
                 var trainingRecord = (from t in db.TrainingFileInfo
                                       where t.FileName == fileName
-                                      select t)
-                                     .Count();
-
-                fileExists = trainingRecord == 1;
+                                      select t).Single();
+                if(trainingRecord!=null)
+                {
+                    FileID = trainingRecord.TrainingFileInfoId;
+                    fileExists = true;
+                }                     
+                else
+                {
+                    fileExists=false;
+                }               
             }
         }
 

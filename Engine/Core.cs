@@ -67,6 +67,8 @@ namespace EHRIProcessor.Engine
                 {
                     TrainingRecordLoader trainingRecordLoader = new TrainingRecordLoader();
                     trainingRecordLoader.Load(trainingFile);
+                    int i = 0;
+                    fileTracker.UpdateCount(i);
                 }
             }
         }
