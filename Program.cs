@@ -1,5 +1,7 @@
 ﻿using System;
 using EHRIProcessor.Engine;
+using EHRIProcessor.Model;
+
 namespace EHRIProcessor
 {
     class Program
@@ -16,5 +18,8 @@ namespace EHRIProcessor
                 Console.WriteLine(x.ToString());
             }      
         }
+
+
+
     }
 }
