@@ -7,11 +7,12 @@ namespace EHRIProcessor.Engine
 {
     class TrainingRecordLoader
     {
-        public List<OLURecord> OLURecords;
+        public List<TrainingRecord> OLURecords;
+     
 
         public TrainingRecordLoader()
         {
-            OLURecords = new List<OLURecord>();
+            OLURecords = new List<TrainingRecord>();
 
         }
 
@@ -20,7 +21,8 @@ namespace EHRIProcessor.Engine
             try 
             {
                 string[] trainingEntries = File.ReadAllLines(trainingFile);
-                loadOluRecords(trainingEntries);
+                string[] cleanedLines = removeDoubleQuotes(trainingEntries);
+                loadOluRecords(cleanedLines);
 
             }
             catch(Exception x)
@@ -29,51 +31,75 @@ namespace EHRIProcessor.Engine
             }
         }
 
+        string[]  removeDoubleQuotes(string[] lines)
+        {
+            string[] newLines = new string[lines.Length];
+            int i = 0;
+            foreach (string line in lines)
+            {
+                string retval = string.Empty;
+                //remove double quote at start and end of each line.
+                //we don't replace because we need to test if there is double quotes 
+                //in the line else where to handle.
+                retval = line.Substring(1);//chop off first double quote
+                retval = retval.Substring(0, retval.Length - 1);//chop of ending double quote
+                int dqTest = retval.IndexOf("\"");
+                if (dqTest > 0)
+                {
+                    retval = retval.Replace("\"", string.Empty); // \"\"WIFM\"\" 
+                }
+                newLines[i] = retval;
+                i++;
+            }
+            return newLines;
+        }
 
         void loadOluRecords(string[] trainingEntries)
         {
             foreach (string trainingEntry in trainingEntries)
             {
-                OLURecord record = new OLURecord();
+                TrainingRecord record = new TrainingRecord();
                 string[] data = trainingEntry.Split("~");
                 for (int i = 0; i < data.Length; i++)
                 {
-                    record.FirstName = data[0];
-                    record.LastName = data[1];
+                    record.CreatedDate = DateTime.Now;
+                    record.EmployeeFirstName = data[0];
+                    record.EmployeeLastName = data[1];
+                    //TODO: NEED TO ACCOUNT FOR MIDDLE NAME
                     record.EmailAddress = data[2];
-                    record.TrainingPurposeType = data[3];
-                    record.TrainingSourceType = data[4];
+                    record.TrainingPurpose = data[3];
+                    record.TrainingSource = data[4];
                     record.TrainingType = data[5];
-                    record.TrainingTitle = data[6];
-                    record.TrainingStartDate = DateTime.Parse(data[7]);
-                    record.TrainingEndDate = DateTime.Parse(data[8]);
-                    record.CHRISUserID = data[9];
+                    record.CourseTitle = data[6];
+                    record.CourseStartDate = data[7];
+                    record.CourseCompletionDate = data[8];
+                    record.PersonId = data[9];
                     record.TrainingDeliveryType = data[10];
-                    record.TrainingCreditDesignationType = data[11];
+                    record.CreditDesignation = data[11];
                     record.TrainingSubType = data[12];
-                    record.TrainingDutyHours = data[13];
-                    record.TrainingNonDutyHours = data[14];
-                    record.TrainingCredit = data[15];
+                    record.DutyHours = decimal.Parse(data[13]);
+                    record.NonDutyHours = decimal.Parse(data[14]);
+                    record.TrainingCredit = decimal.Parse(data[15]);
                     record.VendorName = data[16];
                     record.TrainingLocation = data[17];
-                    record.ContinuedServiceAgreementRequired = data[18];
-                    record.ContinuedServiceAgreementExpDate = data[19];
-                    record.TrainingTuitionandFeesCost = data[20];
-                    record.TrainingTravelCost = data[21];
-                    record.TrainingNonGovtContributionCost = data[22];
-                    record.TrainingMaterialsCost = data[23];
-                    record.TrainingPerDiemCost = data[24];
-                    record.TrainingCreditType = data[25];
-                    record.TrainingAccreditationIndicator = data[26];
-                    record.PriorSubjectKnowledge = data[27];
-                    record.ImpactonPerformance = data[28];
-                    record.RecommendTrainingtoOthers = data[29];
-                    record.TrainingPartOfIDP = data[30];
-                    record.PriorSupervisoryApprovalReceived = data[31];
+                    record.RepaymentAgreementReqd = data[18];
+                    record.ContServiceAgreementSigned = data[19];
+                    record.TutionAndFees = decimal.Parse(data[20]);
+                    record.TravelCosts = decimal.Parse(data[21]);
+                    record.NongovtContrCost = decimal.Parse(data[22]);
+                    record.MaterialCost = decimal.Parse(data[23]);
+                    record.PerdiemCost = decimal.Parse(data[24]);
+                    record.CreditType = data[25];
+                    record.AccreditationIndicator = data[26];
+                    record.PriorKnowledgeLevel = data[27];
+                    record.ImpactOnPerformance = data[28];
+                    record.RecommendTrngToOthers = data[29];
+                    record.TrainingPartOfIdp = data[30];
+                    record.PriorSupvApprovalReceived = data[31];
                     record.TypeOfPayment = data[32];
-                    record.TravelIndicator = data[33];
+                    record.TrainingTravelIndicator = data[33];
                     record.CourseType = data[34];
-                    record.CourseID = data[35];
+                    record.CourseId = data[35];
                 }
                 OLURecords.Add(record);
 

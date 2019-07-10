@@ -1,8 +1,7 @@
-//dotnet ef dbcontext scaffold "Server=172.21.17.100;Database=olu;Uid=aortega;Pwd=Passw0rd@;" "MySql.Data.EntityFrameworkCore" -o .\Model -f -t "ehri_training"
-
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using EHRIProcessor.Engine;
 
 namespace EHRIProcessor.Model
 {
@@ -19,10 +18,12 @@ namespace EHRIProcessor.Model
 
         public virtual DbSet<EhriStudHist> EhriStudHist { get; set; }
         public virtual DbSet<TrainingFileInfo> TrainingFileInfo { get; set; }
-        public virtual DbSet<EhriTraining> EhriTraining { get; set; }
+        public virtual DbSet<TrainingRecord> EhriTraining { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.UseLazyLoadingProxies();
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseMySQL(Config.Settings.OluDB);
@@ -58,7 +59,7 @@ namespace EHRIProcessor.Model
                     .IsUnicode(false);
             });
 			
-            modelBuilder.Entity<EhriTrainingfileinfo>(entity =>
+            modelBuilder.Entity<TrainingFileInfo>(entity =>
             {
                 entity.HasKey(e => e.TrainingFileInfoId);
 
@@ -80,7 +81,7 @@ namespace EHRIProcessor.Model
                 entity.Property(e => e.SavedRecordCount).HasColumnType("int(11)");
             });
 			
-            modelBuilder.Entity<EhriTraining>(entity =>
+            modelBuilder.Entity<TrainingRecord>(entity =>
             {
                 entity.ToTable("ehri_training", "olu");
 
@@ -193,7 +194,8 @@ namespace EHRIProcessor.Model
 
                 entity.Property(e => e.PersonId)
                     .HasColumnName("PERSON_ID")
-                    .HasColumnType("bigint(20)");
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.PriorKnowledgeLevel)
                     .HasColumnName("PRIOR_KNOWLEDGE_LEVEL")

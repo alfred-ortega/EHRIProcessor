@@ -3,12 +3,19 @@ using System.Linq;
 using EHRIProcessor.Model;
 namespace EHRIProcessor.Engine
 {
+    /// <summary>
+    /// The File Tracker object verifies what files have been processed, how many records were in the file and how many
+    ///  of those records were saved in the database as valid.  It does this by way of the TrainingFileInfo class.
+    /// </summary>
     class FileTracker
     {
         public string FileID;
         private bool fileExists = false;
         public bool FileExists {get {return fileExists;}}
-
+        /// <summary>
+        /// The FileTracker constructor takes in the filename that will be parsed and tracked.
+        /// </summary>
+        /// <param name="fileName">name of the file to track</param>
         public FileTracker(string fileName)
         {
             checkIfFileExists(fileName);
@@ -20,8 +27,10 @@ namespace EHRIProcessor.Engine
         {
             using (oluContext db = new oluContext())
             {
-                var trainingRecord = db.TrainingFileInfo
-                                     .Single(t => t.TrainingFileInfoId == FileID);
+                var trainingRecord = (from t in db.TrainingFileInfo
+                                     where t.TrainingFileInfoId == FileID
+                                     select t).First();
+
 
                 trainingRecord.SavedRecordCount = processedCount;
 
@@ -34,9 +43,8 @@ namespace EHRIProcessor.Engine
         {
             using (oluContext db = new oluContext())
             {
-                var trainingRecord = (from t in db.TrainingFileInfo
-                                      where t.FileName == fileName
-                                      select t).Single();
+                var trainingRecord = db.TrainingFileInfo.FirstOrDefault(t => t.FileName == fileName);
+                
                 if(trainingRecord!=null)
                 {
                     FileID = trainingRecord.TrainingFileInfoId;
@@ -62,10 +70,6 @@ namespace EHRIProcessor.Engine
                 db.TrainingFileInfo.Add(tf);
                 db.SaveChanges();
             }
-
-
-
-
         }
 
         private int getFileRecordCount(string fileName)
@@ -73,7 +77,7 @@ namespace EHRIProcessor.Engine
             int i = 0;
             try
             {
-                return System.IO.File.ReadAllLines(fileName).Length;
+                i = System.IO.File.ReadAllLines(fileName).Length;
             }
             catch(Exception)
             {

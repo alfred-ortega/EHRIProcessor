@@ -11,11 +11,11 @@ namespace EHRIProcessor.Model
         public DateTime DateOfBirth { get; set; }
         public string EmployeeID { get; set; }
         public string AgencySubElement { get; set; }
-        public List<OLURecord> TrainingRecords { get; set; }
+        public List<TrainingRecord> TrainingRecords { get; set; }
 
         public Employee()
         {
-            TrainingRecords = new List<OLURecord>();
+            TrainingRecords = new List<TrainingRecord>();
         }
 
         public void ValidateTrainingRecords()
@@ -24,8 +24,8 @@ namespace EHRIProcessor.Model
             {
                 TrainingRecords.Sort();
                 removeDuplicates();
-                List<OLURecord> cleanedList = new List<OLURecord>();
-                foreach (OLURecord record in TrainingRecords)
+                List<TrainingRecord> cleanedList = new List<TrainingRecord>();
+                foreach (TrainingRecord record in TrainingRecords)
                 {
                     if(record.CheckIfValid())
                     {
@@ -41,11 +41,11 @@ namespace EHRIProcessor.Model
         {
             string old_courseId, new_courseId;
             old_courseId = string.Empty;
-            new_courseId = TrainingRecords[0].CourseID;
-            List<OLURecord> cleanedList = new List<OLURecord>();
-            foreach(OLURecord record in TrainingRecords)
+            new_courseId = TrainingRecords[0].CourseId;
+            List<TrainingRecord> cleanedList = new List<TrainingRecord>();
+            foreach(TrainingRecord record in TrainingRecords)
             {
-                new_courseId = record.CourseID;
+                new_courseId = record.CourseId;
                 if (new_courseId != old_courseId)
                 {
                     cleanedList.Add(record);

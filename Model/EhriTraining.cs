@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace EHRIProcessor.Model
 {
-    public partial class EhriTraining
+    public partial class TrainingRecord
     {
         public int EhriTrainingId { get; set; }
         public int? TrainingFileInfoId { get; set; }
         public int? LrnInterfaceOutId { get; set; }
-        public long? PersonId { get; set; }
+        public string PersonId { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? LastUpdatedDate { get; set; }
         public string ErrorMessage { get; set; }
@@ -49,5 +49,11 @@ namespace EHRIProcessor.Model
         public string TrainingTravelIndicator { get; set; }
         public string CourseType { get; set; }
         public string CourseId { get; set; }
+
+        public string Birth_Date { get; set; }
+        public string SSN { get; set; }
+
+
+
     }
 }

@@ -32,7 +32,7 @@ namespace EHRIProcessor.Engine
             {
                 emp.ValidateTrainingRecords();
 
-                foreach (OLURecord olu in emp.TrainingRecords)
+                foreach (TrainingRecord olu in emp.TrainingRecords)
                 {
                     sb.AppendLine("<TrainingRecord>");
                     sb.AppendLine(writeNode("A", "RecordAction"));
@@ -44,29 +44,29 @@ namespace EHRIProcessor.Engine
                     sb.AppendLine(writeNode(emp.AgencySubElement, "AgencySubelement"));
                     sb.AppendLine("</Employee>");
 
-                    sb.AppendLine(writeNode(olu.TrainingTitle,"TrainingTitle"));
+                    sb.AppendLine(writeNode(olu.CourseTitle,"TrainingTitle"));
                     sb.AppendLine(writeNode(olu.TrainingType,"TrainingTypeCode"));
                     sb.AppendLine(writeNode(olu.TrainingSubType,"TrainingSubTypeCode"));
-                    sb.AppendLine(writeNode(olu.TrainingStartDate.ToString(dateFormat),"TrainingStartDate"));
-                    sb.AppendLine(writeNode(olu.TrainingEndDate.ToString(dateFormat), "TrainingEndDate"));
+                    sb.AppendLine(writeNode(olu.CourseStartDate,"TrainingStartDate"));
+                    sb.AppendLine(writeNode(olu.CourseCompletionDate, "TrainingEndDate"));
 
                     sb.AppendLine("<ContinuedServiceAgreement>");
                     sb.AppendLine(writeNode("NA", "AgreementRequiredInd"));
                     sb.AppendLine("</ContinuedServiceAgreement>");
 
-                    sb.AppendLine(writeNode(olu.TrainingAccreditationIndicator, "AccreditationInd"));
+                    //sb.AppendLine(writeNode(olu.TrainingAccreditationIndicator, "AccreditationInd"));
 
                     sb.AppendLine("<TrainingCredit>");
-                    sb.AppendLine(writeNode(olu.TrainingCredit, "CreditAmt"));
-                    sb.AppendLine(writeNode(olu.TrainingCreditDesignationType, "DesignationType"));
-                    sb.AppendLine(writeNode(olu.TrainingCreditType, "CreditType"));
+                    //sb.AppendLine(writeNode(olu.TrainingCredit, "CreditAmt"));
+                    //sb.AppendLine(writeNode(olu.TrainingCreditDesignationType, "DesignationType"));
+                    //sb.AppendLine(writeNode(olu.TrainingCreditType, "CreditType"));
                     sb.AppendLine("</TrainingCredit>");
 
-                    sb.AppendLine(writeNode(olu.TrainingDutyHours, "TrainingDutyHours"));
+                   // sb.AppendLine(writeNode(olu.TrainingDutyHours, "TrainingDutyHours"));
                     sb.AppendLine(writeNode("0", "TrainingNonDutyHours"));
                     sb.AppendLine(writeNode(olu.TrainingDeliveryType, "TrainingDeliveryTypeCode"));
-                    sb.AppendLine(writeNode(olu.TrainingPurposeType, "TrainingPurposeTypeCode"));
-                    sb.AppendLine(writeNode(olu.TrainingSourceType, "TrainingSourceTypeCode"));
+                    //sb.AppendLine(writeNode(olu.TrainingPurposeType, "TrainingPurposeTypeCode"));
+                    //sb.AppendLine(writeNode(olu.TrainingSourceType, "TrainingSourceTypeCode"));
 
                     sb.AppendLine("<TrainingCost>");
                     sb.AppendLine(writeNode("0", "MaterialsCost"));

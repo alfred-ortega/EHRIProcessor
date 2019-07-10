@@ -4,6 +4,9 @@ using MySql.Data.MySqlClient;
 
 namespace EHRIProcessor.Engine
 {
+    /// <summary>
+    /// Database Wrapper for executing commands against the MySql database.
+    /// </summary>
     class Database
     {
 

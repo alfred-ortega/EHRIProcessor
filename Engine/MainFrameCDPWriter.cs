@@ -4,6 +4,10 @@ using System.Text;
 
 namespace EHRIProcessor.Engine
 {
+    /// <summary>
+    /// Each file that is sent to the OPM mainframe must be identified in an "copy" file with mainframe instructions.
+    /// The MainFrameCDPWriter writes out those instructions for each file being submitted to OPM.
+    /// </summary>
     public class MainFrameCDPWriter
     {
         StringBuilder sb;

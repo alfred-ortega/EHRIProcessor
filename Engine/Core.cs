@@ -2,16 +2,19 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using EHRIProcessor.Model;
 
 namespace EHRIProcessor.Engine
 {
     class Core
     {
+        List<EhriStudHist> Students;        
         string[] trainingFiles;
         bool doEHRI;
         public Core()
         {
+            Students = new List<EhriStudHist>();
         }
 
 
@@ -23,6 +26,7 @@ namespace EHRIProcessor.Engine
             if(filesExist)
             {
                 updateEmployees();
+                loadEmployees();
                 loadTrainingFiles();
                 if(doEHRI)
                 {
@@ -47,12 +51,26 @@ namespace EHRIProcessor.Engine
             return trainingFiles.Length > 0;
         }
 
-#region "Employee Update"
+#region "Employees"
         void updateEmployees()
         {
-            EmployeeDBUpdater db = new  EmployeeDBUpdater();
+            EmployeeDB db = new  EmployeeDB();
             db.UpdateEmployeeData();
         }
+
+        void loadEmployees()
+        {
+            using(oluContext db = new oluContext())
+            {
+                Students = db.EhriStudHist.ToList();
+            }
+        }
+
+        EhriStudHist selectStudent(string employeeID)
+        {
+            return Students.Where(s => s.Emplid == employeeID).Single();
+        }
+
 
 #endregion
 
@@ -62,18 +80,39 @@ namespace EHRIProcessor.Engine
         {
             foreach(string trainingFile in trainingFiles)
             {
-                FileTracker fileTracker = new FileTracker(trainingFile);
+                FileTracker fileTracker = new FileTracker(trainingFile); 
                 if(!fileTracker.FileExists)
                 {
                     TrainingRecordLoader trainingRecordLoader = new TrainingRecordLoader();
                     trainingRecordLoader.Load(trainingFile);
                     int i = 0;
+                    mergeEmployeeTrainingData(trainingRecordLoader.OLURecords);
                     fileTracker.UpdateCount(i);
                 }
             }
         }
+        void mergeEmployeeTrainingData(List<TrainingRecord> trainingRecords)
+        {
+            int i = 0;
+            oluContext db = new oluContext();
 
-        private void executeEHRIProcess(List<OLURecord> trainingRecords)
+            foreach(TrainingRecord trainingrecord in trainingRecords)
+            {
+                EhriStudHist student = selectStudent(trainingrecord.PersonId);
+                trainingrecord.EmployeeFirstName = student.FirstName;
+                trainingrecord.EmployeeMiddleName = student.MiddleName;
+                trainingrecord.EmployeeLastName = student.LastName;
+                trainingrecord.SSN = student.Ssn;
+                trainingrecord.Birth_Date = student.Birthdate.ToShortDateString();
+                db.EhriTraining.Add(trainingrecord);
+                i++;
+            }
+
+            db.SaveChanges();
+            Console.WriteLine(i + " records added");
+        }
+
+        private void executeEHRIProcess(List<TrainingRecord> trainingRecords)
         {
             //throw new NotImplementedException();
         }

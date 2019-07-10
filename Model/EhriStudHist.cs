@@ -8,6 +8,16 @@ namespace EHRIProcessor.Model
         public string Emplid { get; set; }
         public DateTime Birthdate { get; set; }
         public string Ssn { get; set; }
-        public DateTime? LastUpdated { get; set; }
+
+        public string LastName { get; set; }
+
+        public string FirstName { get; set; }
+
+        public string MiddleName { get; set; }                        
+        public DateTime? UpdatedAt { get; set; }
+
+        public DateTime? CreatedAt { get; set; }
+
+
     }
 }

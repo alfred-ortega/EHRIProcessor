@@ -18,11 +18,12 @@ namespace EHRIProcessor.Model
 
         public virtual DbSet<EhriStudHist> EhriStudHist { get; set; }
         public virtual DbSet<TrainingFileInfo> TrainingFileInfo { get; set; }
-        public virtual DbSet<EhriTraining> EhriTraining { get; set; }
+        public virtual DbSet<TrainingRecord> EhriTraining { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.UseLazyLoadingProxies();
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseMySQL(Config.Settings.OluDB);
@@ -41,7 +42,7 @@ namespace EHRIProcessor.Model
 
                 entity.Property(e => e.Emplid)
                     .HasColumnName("emplid")
-                    .HasMaxLength(8)
+                    .HasMaxLength(11)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
@@ -49,7 +50,28 @@ namespace EHRIProcessor.Model
                     .HasColumnName("birthdate")
                     .HasColumnType("date");
 
-                entity.Property(e => e.LastUpdated).HasColumnName("last_updated");
+                entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+
+                entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+
+                entity.Property(e => e.LastName)
+                    .IsRequired()
+                    .HasColumnName("last_name")
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FirstName)
+                    .IsRequired()
+                    .HasColumnName("first_name")
+                    .HasMaxLength(30)
+                    .IsUnicode(false); 
+
+                entity.Property(e => e.MiddleName)
+                    .IsRequired()
+                    .HasColumnName("middle_name")
+                    .HasMaxLength(30)
+                    .IsUnicode(false);                                       
+
 
                 entity.Property(e => e.Ssn)
                     .IsRequired()
@@ -80,8 +102,10 @@ namespace EHRIProcessor.Model
                 entity.Property(e => e.SavedRecordCount).HasColumnType("int(11)");
             });
 			
-            modelBuilder.Entity<EhriTraining>(entity =>
+            modelBuilder.Entity<TrainingRecord>(entity =>
             {
+                entity.HasKey(e => e.EhriTrainingId);
+
                 entity.ToTable("ehri_training", "olu");
 
                 entity.Property(e => e.EhriTrainingId)
@@ -193,7 +217,8 @@ namespace EHRIProcessor.Model
 
                 entity.Property(e => e.PersonId)
                     .HasColumnName("PERSON_ID")
-                    .HasColumnType("bigint(20)");
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.PriorKnowledgeLevel)
                     .HasColumnName("PRIOR_KNOWLEDGE_LEVEL")
@@ -285,6 +310,14 @@ namespace EHRIProcessor.Model
                     .HasColumnName("VENDOR_NAME")
                     .HasMaxLength(240)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Birth_Date)
+                    .HasColumnName("Birth_Date");
+
+                entity.Property(e => e.SSN)
+                    .HasColumnName("ssn")
+                    .HasMaxLength(10); 
+                    
             });
 			
 			
