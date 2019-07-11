@@ -9,12 +9,12 @@ namespace EHRIProcessor.Engine
 {
     class Core
     {
-        List<EhriStudHist> Students;        
+        IQueryable<EhriEmployee> Students;        
         string[] trainingFiles;
         bool doEHRI;
         public Core()
         {
-            Students = new List<EhriStudHist>();
+
         }
 
 
@@ -60,13 +60,16 @@ namespace EHRIProcessor.Engine
 
         void loadEmployees()
         {
-            using(oluContext db = new oluContext())
+            using(OluContext db = new OluContext())
             {
-                Students = db.EhriStudHist.ToList();
+
+                Students = db.EhriEmployee;
+                int i = Students.Count();
+                Console.WriteLine(i + "records");
             }
         }
 
-        EhriStudHist selectStudent(string employeeID)
+        EhriEmployee selectStudent(string employeeID)
         {
             return Students.Where(s => s.Emplid == employeeID).Single();
         }
@@ -85,34 +88,36 @@ namespace EHRIProcessor.Engine
                 {
                     TrainingRecordLoader trainingRecordLoader = new TrainingRecordLoader();
                     trainingRecordLoader.Load(trainingFile);
-                    int i = 0;
-                    mergeEmployeeTrainingData(trainingRecordLoader.OLURecords);
+                    int i = mergeEmployeeTrainingData(trainingRecordLoader.OLURecords,fileTracker.FileID);
                     fileTracker.UpdateCount(i);
                 }
             }
         }
-        void mergeEmployeeTrainingData(List<TrainingRecord> trainingRecords)
+        int mergeEmployeeTrainingData(List<EhriTraining> trainingRecords, string fileId)
         {
             int i = 0;
-            oluContext db = new oluContext();
+            OluContext db = new OluContext();
 
-            foreach(TrainingRecord trainingrecord in trainingRecords)
+            foreach(EhriTraining trainingrecord in trainingRecords)
             {
-                EhriStudHist student = selectStudent(trainingrecord.PersonId);
+                EhriEmployee student = selectStudent(trainingrecord.PersonId);
+                trainingrecord.TrainingFileInfoId = fileId;
                 trainingrecord.EmployeeFirstName = student.FirstName;
                 trainingrecord.EmployeeMiddleName = student.MiddleName;
                 trainingrecord.EmployeeLastName = student.LastName;
-                trainingrecord.SSN = student.Ssn;
-                trainingrecord.Birth_Date = student.Birthdate.ToShortDateString();
+                trainingrecord.Ssn = student.Ssn;
+                trainingrecord.BirthDate = student.Birthdate;
+                trainingrecord.CheckIfValid();
                 db.EhriTraining.Add(trainingrecord);
                 i++;
             }
 
             db.SaveChanges();
             Console.WriteLine(i + " records added");
+            return i;
         }
 
-        private void executeEHRIProcess(List<TrainingRecord> trainingRecords)
+        private void executeEHRIProcess(List<Model.EhriTraining> trainingRecords)
         {
             //throw new NotImplementedException();
         }

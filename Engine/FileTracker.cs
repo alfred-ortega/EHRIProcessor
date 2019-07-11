@@ -25,9 +25,9 @@ namespace EHRIProcessor.Engine
 
         public void UpdateCount(int processedCount)
         {
-            using (oluContext db = new oluContext())
+            using (OluContext db = new OluContext())
             {
-                var trainingRecord = (from t in db.TrainingFileInfo
+                var trainingRecord = (from t in db.EhriTrainingfileinfo
                                      where t.TrainingFileInfoId == FileID
                                      select t).First();
 
@@ -35,15 +35,14 @@ namespace EHRIProcessor.Engine
                 trainingRecord.SavedRecordCount = processedCount;
 
                 db.SaveChanges();
-
             }
         }
 
         void checkIfFileExists(string fileName)
         {
-            using (oluContext db = new oluContext())
+            using (OluContext db = new OluContext())
             {
-                var trainingRecord = db.TrainingFileInfo.FirstOrDefault(t => t.FileName == fileName);
+                var trainingRecord = db.EhriTrainingfileinfo.FirstOrDefault(t => t.FileName == fileName);
                 
                 if(trainingRecord!=null)
                 {
@@ -60,14 +59,14 @@ namespace EHRIProcessor.Engine
         private void addFile(string fileName)
         {
             FileID = Guid.NewGuid().ToString();
-            TrainingFileInfo tf = new TrainingFileInfo();
+            EhriTrainingfileinfo tf = new EhriTrainingfileinfo();
             tf.TrainingFileInfoId = FileID;
             tf.FileName = fileName;
             tf.Loaded = DateTime.Now;
             tf.FileRecordCount = getFileRecordCount(fileName);
-            using(oluContext db = new oluContext())
+            using(OluContext db = new OluContext())
             {
-                db.TrainingFileInfo.Add(tf);
+                db.EhriTrainingfileinfo.Add(tf);
                 db.SaveChanges();
             }
         }

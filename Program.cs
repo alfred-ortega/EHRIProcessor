@@ -10,8 +10,8 @@ namespace EHRIProcessor
         {
             try
             {
-                Core core = new Core();
-                core.Execute();
+               Core core = new Core();
+               core.Execute();
             }   
             catch(Exception x)
             {

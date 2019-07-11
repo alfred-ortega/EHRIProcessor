@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace EHRIProcessor.Model
 {
-    public partial class TrainingFileInfo
+    public partial class EhriTrainingfileinfo
     {
         public string TrainingFileInfoId { get; set; }
         public string FileName { get; set; }

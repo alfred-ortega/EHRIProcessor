@@ -7,12 +7,12 @@ namespace EHRIProcessor.Engine
 {
     class TrainingRecordLoader
     {
-        public List<TrainingRecord> OLURecords;
+        public List<EhriTraining> OLURecords;
      
 
         public TrainingRecordLoader()
         {
-            OLURecords = new List<TrainingRecord>();
+            OLURecords = new List<EhriTraining>();
 
         }
 
@@ -58,14 +58,15 @@ namespace EHRIProcessor.Engine
         {
             foreach (string trainingEntry in trainingEntries)
             {
-                TrainingRecord record = new TrainingRecord();
+                EhriTraining record = new EhriTraining();
                 string[] data = trainingEntry.Split("~");
                 for (int i = 0; i < data.Length; i++)
                 {
+
                     record.CreatedDate = DateTime.Now;
                     record.EmployeeFirstName = data[0];
                     record.EmployeeLastName = data[1];
-                    //TODO: NEED TO ACCOUNT FOR MIDDLE NAME
+                    // //TODO: NEED TO ACCOUNT FOR MIDDLE NAME
                     record.EmailAddress = data[2];
                     record.TrainingPurpose = data[3];
                     record.TrainingSource = data[4];

@@ -11,7 +11,7 @@ namespace EHRIProcessor.Engine
         StringBuilder sb = new StringBuilder();
         string dateFormat = "yyyy-MM-dd";
 
-        public XMLWriter(List<Employee> records)
+        public XMLWriter(List<EhriTraining> records)
         {
             writeHeader();
             writeBody(records);
@@ -26,13 +26,14 @@ namespace EHRIProcessor.Engine
         }
 
 
-        void writeBody(List<Employee> records)
+        void writeBody(List<EhriTraining> records)
         {
-            foreach (Employee emp in records)
+/*            
+            foreach (EhriEmployee emp in records)
             {
-                emp.ValidateTrainingRecords();
+                
 
-                foreach (TrainingRecord olu in emp.TrainingRecords)
+                 foreach (Model.EhriTraining olu in emp.TrainingRecords) 
                 {
                     sb.AppendLine("<TrainingRecord>");
                     sb.AppendLine(writeNode("A", "RecordAction"));
@@ -44,11 +45,11 @@ namespace EHRIProcessor.Engine
                     sb.AppendLine(writeNode(emp.AgencySubElement, "AgencySubelement"));
                     sb.AppendLine("</Employee>");
 
-                    sb.AppendLine(writeNode(olu.CourseTitle,"TrainingTitle"));
-                    sb.AppendLine(writeNode(olu.TrainingType,"TrainingTypeCode"));
-                    sb.AppendLine(writeNode(olu.TrainingSubType,"TrainingSubTypeCode"));
-                    sb.AppendLine(writeNode(olu.CourseStartDate,"TrainingStartDate"));
-                    sb.AppendLine(writeNode(olu.CourseCompletionDate, "TrainingEndDate"));
+                    // sb.AppendLine(writeNode(olu.CourseTitle,"TrainingTitle"));
+                    // sb.AppendLine(writeNode(olu.TrainingType,"TrainingTypeCode"));
+                    // sb.AppendLine(writeNode(olu.TrainingSubType,"TrainingSubTypeCode"));
+                    // sb.AppendLine(writeNode(olu.CourseStartDate,"TrainingStartDate"));
+                    // sb.AppendLine(writeNode(olu.CourseCompletionDate, "TrainingEndDate"));
 
                     sb.AppendLine("<ContinuedServiceAgreement>");
                     sb.AppendLine(writeNode("NA", "AgreementRequiredInd"));
@@ -62,9 +63,9 @@ namespace EHRIProcessor.Engine
                     //sb.AppendLine(writeNode(olu.TrainingCreditType, "CreditType"));
                     sb.AppendLine("</TrainingCredit>");
 
-                   // sb.AppendLine(writeNode(olu.TrainingDutyHours, "TrainingDutyHours"));
+                    // sb.AppendLine(writeNode(olu.TrainingDutyHours, "TrainingDutyHours"));
                     sb.AppendLine(writeNode("0", "TrainingNonDutyHours"));
-                    sb.AppendLine(writeNode(olu.TrainingDeliveryType, "TrainingDeliveryTypeCode"));
+                    //sb.AppendLine(writeNode(olu.TrainingDeliveryType, "TrainingDeliveryTypeCode"));
                     //sb.AppendLine(writeNode(olu.TrainingPurposeType, "TrainingPurposeTypeCode"));
                     //sb.AppendLine(writeNode(olu.TrainingSourceType, "TrainingSourceTypeCode"));
 
@@ -81,17 +82,7 @@ namespace EHRIProcessor.Engine
 
                 }
             }
-
-
-
-
-
-
-
-
-
-
-
+*/
         }
 
         string writeNode(string value, string nodeName)
