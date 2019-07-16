@@ -75,7 +75,7 @@ namespace EHRIProcessor.Engine
 
         private void executeEHRIProcess(List<Model.EhriTraining> trainingRecords)
         {
-            //throw new NotImplementedException();
+            XMLWriter x = new XMLWriter();
         }
 #endregion
 

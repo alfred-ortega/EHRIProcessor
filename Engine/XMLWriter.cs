@@ -11,78 +11,75 @@ namespace EHRIProcessor.Engine
         StringBuilder sb = new StringBuilder();
         string dateFormat = "yyyy-MM-dd";
 
-        public XMLWriter(List<EhriTraining> records)
+        public XMLWriter()
+        {
+
+        }
+
+        public void WriteEhriFile(List<EhriTraining> records, string fileName)
         {
             writeHeader();
             writeBody(records);
             writeFooter();
-
+            writeFile(fileName);
         }
 
         void writeHeader()
         {
             sb.AppendLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            sb.AppendLine("<TrainingExport fileDate=\"2018-03-01\" fileSource=\"GSAOLU\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://ehr.opm.gov/schemas/training/EHRITraining_v4_0.xsd\">");
+            sb.AppendLine("<TrainingExport fileDate=\"" + DateTime.Now.ToString(dateFormat)  + "\" fileSource=\"GSAOLU\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://ehr.opm.gov/schemas/training/EHRITraining_v4_0.xsd\">");
         }
 
 
         void writeBody(List<EhriTraining> records)
         {
-/*            
-            foreach (EhriEmployee emp in records)
+                foreach (EhriTraining record in records) 
             {
-                
+                sb.AppendLine("<TrainingRecord>");
+                sb.AppendLine(writeNode("A", "RecordAction"));
 
-                 foreach (Model.EhriTraining olu in emp.TrainingRecords) 
-                {
-                    sb.AppendLine("<TrainingRecord>");
-                    sb.AppendLine(writeNode("A", "RecordAction"));
-                    //Employee
-                    sb.AppendLine("<Employee>");
-                    sb.AppendLine(writeNode(emp.SSN, "SSN"));
-                    sb.AppendLine(writeNode(emp.DateOfBirth.ToString(dateFormat), "BirthDate"));
-                    sb.AppendLine(writeNode(string.Empty, "EHRIEmployeeId"));
-                    sb.AppendLine(writeNode(emp.AgencySubElement, "AgencySubelement"));
-                    sb.AppendLine("</Employee>");
+                sb.AppendLine("<Employee>");
+                sb.AppendLine(writeNode(record.Ssn, "SSN"));
+                sb.AppendLine(writeNode(record.BirthDate.ToString(dateFormat), "BirthDate"));
+                sb.AppendLine(writeNode(string.Empty, "EHRIEmployeeId"));
+                //sb.AppendLine(writeNode(record.AgencySubElement, "AgencySubelement"));
+                sb.AppendLine("</Employee>");
 
-                    // sb.AppendLine(writeNode(olu.CourseTitle,"TrainingTitle"));
-                    // sb.AppendLine(writeNode(olu.TrainingType,"TrainingTypeCode"));
-                    // sb.AppendLine(writeNode(olu.TrainingSubType,"TrainingSubTypeCode"));
-                    // sb.AppendLine(writeNode(olu.CourseStartDate,"TrainingStartDate"));
-                    // sb.AppendLine(writeNode(olu.CourseCompletionDate, "TrainingEndDate"));
+                sb.AppendLine(writeNode(record.CourseTitle,"TrainingTitle"));
+                sb.AppendLine(writeNode(record.TrainingType,"TrainingTypeCode"));
+                sb.AppendLine(writeNode(record.TrainingSubType,"TrainingSubTypeCode"));
+                sb.AppendLine(writeNode(record.CourseStartDate,"TrainingStartDate"));
+                sb.AppendLine(writeNode(record.CourseCompletionDate, "TrainingEndDate"));
 
-                    sb.AppendLine("<ContinuedServiceAgreement>");
-                    sb.AppendLine(writeNode("NA", "AgreementRequiredInd"));
-                    sb.AppendLine("</ContinuedServiceAgreement>");
+                sb.AppendLine("<ContinuedServiceAgreement>");
+                sb.AppendLine(writeNode(record.ContServiceAgreementSigned, "AgreementRequiredInd"));
+                sb.AppendLine("</ContinuedServiceAgreement>");
 
-                    //sb.AppendLine(writeNode(olu.TrainingAccreditationIndicator, "AccreditationInd"));
+                sb.AppendLine(writeNode(record.AccreditationIndicator, "AccreditationInd"));
 
-                    sb.AppendLine("<TrainingCredit>");
-                    //sb.AppendLine(writeNode(olu.TrainingCredit, "CreditAmt"));
-                    //sb.AppendLine(writeNode(olu.TrainingCreditDesignationType, "DesignationType"));
-                    //sb.AppendLine(writeNode(olu.TrainingCreditType, "CreditType"));
-                    sb.AppendLine("</TrainingCredit>");
+                sb.AppendLine("<TrainingCredit>");
+                sb.AppendLine(writeNode(record.TrainingCredit.ToString(), "CreditAmt"));
+                sb.AppendLine(writeNode(record.CreditDesignation, "DesignationType"));
+                sb.AppendLine(writeNode(record.CreditType, "CreditType"));
+                sb.AppendLine("</TrainingCredit>");
 
-                    // sb.AppendLine(writeNode(olu.TrainingDutyHours, "TrainingDutyHours"));
-                    sb.AppendLine(writeNode("0", "TrainingNonDutyHours"));
-                    //sb.AppendLine(writeNode(olu.TrainingDeliveryType, "TrainingDeliveryTypeCode"));
-                    //sb.AppendLine(writeNode(olu.TrainingPurposeType, "TrainingPurposeTypeCode"));
-                    //sb.AppendLine(writeNode(olu.TrainingSourceType, "TrainingSourceTypeCode"));
+                sb.AppendLine(writeNode(record.DutyHours.ToString(), "TrainingDutyHours"));
+                sb.AppendLine(writeNode(record.NonDutyHours.ToString(), "TrainingNonDutyHours"));
+                sb.AppendLine(writeNode(record.TrainingDeliveryType, "TrainingDeliveryTypeCode"));
+                sb.AppendLine(writeNode(record.TrainingPurpose, "TrainingPurposeTypeCode"));
+                sb.AppendLine(writeNode(record.TrainingSource, "TrainingSourceTypeCode"));
 
-                    sb.AppendLine("<TrainingCost>");
-                    sb.AppendLine(writeNode("0", "MaterialsCost"));
-                    sb.AppendLine(writeNode("0", "PerDiemCost"));
-                    sb.AppendLine(writeNode("0", "TravelCost"));
-                    sb.AppendLine(writeNode("0", "TuitionAndFees"));
-                    sb.AppendLine(writeNode("0", "NonGovernmentContribution"));
-                    sb.AppendLine("</TrainingCost>");
+                sb.AppendLine("<TrainingCost>");
+                sb.AppendLine(writeNode(record.MaterialCost.ToString(), "MaterialsCost"));
+                sb.AppendLine(writeNode(record.PerdiemCost.ToString(), "PerDiemCost"));
+                sb.AppendLine(writeNode(record.TravelCosts.ToString(), "TravelCost"));
+                sb.AppendLine(writeNode(record.TutionAndFees.ToString(), "TuitionAndFees"));
+                sb.AppendLine(writeNode(record.NongovtContrCost.ToString(), "NonGovernmentContribution"));
+                sb.AppendLine("</TrainingCost>");
 
-                    sb.AppendLine(writeNode("N", "TrainingTravelIndicator"));
-                    sb.AppendLine("</TrainingRecord>");
-
-                }
+                sb.AppendLine(writeNode(record.TrainingTravelIndicator, "TrainingTravelIndicator"));
+                sb.AppendLine("</TrainingRecord>");
             }
-*/
         }
 
         string writeNode(string value, string nodeName)
@@ -96,7 +93,7 @@ namespace EHRIProcessor.Engine
             sb.Append("</TrainingExport>");
         }
 
-        public void WriteFile(string path)
+        void writeFile(string path)
         {
             File.WriteAllText(path, sb.ToString());
         }
