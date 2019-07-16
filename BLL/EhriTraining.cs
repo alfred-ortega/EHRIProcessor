@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EHRIProcessor.Model
 {
@@ -13,12 +14,13 @@ namespace EHRIProcessor.Model
             {
                 formatRecord();
                 checkCompletionDates();
-                validFieldFromList(TrainingRecordValues.Value.DeliveryType,TrainingDeliveryType,"Delivery Type");
-                validFieldFromList(TrainingRecordValues.Value.CreditType,CreditType,"Credit Type");
-                validFieldFromList(TrainingRecordValues.Value.SourceType,TrainingSource,"Source Type");
-                validFieldFromList(TrainingRecordValues.Value.DesignationType,CreditDesignation,"Designation Type");
-                validFieldFromList(TrainingRecordValues.Value.TrainingType,TrainingType,"Training Type");
-                validFieldFromList(TrainingRecordValues.Value.TrainingSubType,TrainingSubType,"Training Sub-Type");
+                TrainingDeliveryType = convertDescriptionToCode(TrainingRecordValues.Value.DeliveryType,TrainingDeliveryType,"Delivery Type");
+                CreditType = convertDescriptionToCode(TrainingRecordValues.Value.CreditType,CreditType,"Credit Type");
+                TrainingSource = convertDescriptionToCode(TrainingRecordValues.Value.SourceType,TrainingSource,"Source Type");
+                CreditDesignation = convertDescriptionToCode(TrainingRecordValues.Value.DesignationType,CreditDesignation,"Designation Type");
+                TrainingType = convertDescriptionToCode(TrainingRecordValues.Value.TrainingType,TrainingType,"Training Type");
+                TrainingSubType = convertDescriptionToCode(TrainingRecordValues.Value.TrainingSubType,TrainingSubType,"Training Sub-Type");
+                TrainingPurpose = convertDescriptionToCode(TrainingRecordValues.Value.PurposeType,TrainingPurpose,"Purpose Type");
                 ProcessStatus = "R";
             }
             catch(Exception x)
@@ -37,16 +39,26 @@ namespace EHRIProcessor.Model
             }
         }
 
-        void validFieldFromList(string[] validValues, string testValue, string fieldName)
+        string convertDescriptionToCode(Dictionary<string,string> validValues, string testValue, string fieldName)
         {
-            int i = Array.IndexOf(validValues,testValue);
-            if(i == -1)
+            int i = 0;
+            var arrayOfValues = validValues.Values.ToArray();
+            string code = string.Empty;
+            foreach(KeyValuePair<string,string> validValue in validValues)
+            {
+                if(validValue.Value == testValue)
+                {
+                    i++;
+                    code = validValue.Key;
+                }
+
+            }
+            if(i == 0)
             {
                 throw new Exception(string.Format("Invalid value of {0} for {1}",testValue,fieldName));
             }
-
+            return code;
         }
-
         
 
 
@@ -64,19 +76,19 @@ namespace EHRIProcessor.Model
 #region "Format"
         private void formatRecord()
         {
-            // checkForSpecialCharactersInTitle(this.CourseTitle);
-            // this.ContServiceAgreementSigned = setYesNoNAFields(this.ContServiceAgreementSigned);
-            // this.AccreditationIndicator = setYesNoNAFields(this.AccreditationIndicator);
-            // this.TrainingTravelIndicator = setYesNoNAFields(this.TrainingTravelIndicator);
+             checkTitleForSpecialCharactersInTitle();
+             ContServiceAgreementSigned = setYesNoNAFields(ContServiceAgreementSigned);
+             AccreditationIndicator = setYesNoNAFields(AccreditationIndicator);
+             TrainingTravelIndicator = setYesNoNAFields(TrainingTravelIndicator);
         }
 
-        private string checkForSpecialCharactersInTitle(string valueToTest)
+        private void checkTitleForSpecialCharactersInTitle()
         {
-            string retval = valueToTest;
-            retval = retval.Replace("&", "&amp;");
-            retval = retval.Replace("<", "&lt;");
-            retval = retval.Replace(">", "&gt;");
-            return retval;
+            string testValue = CourseTitle;
+            testValue = testValue.Replace("&", "&amp;");
+            testValue = testValue.Replace("<", "&lt;");
+            testValue = testValue.Replace(">", "&gt;");
+            CourseTitle = testValue;
         }
 
 

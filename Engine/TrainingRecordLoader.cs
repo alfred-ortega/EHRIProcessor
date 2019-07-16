@@ -56,42 +56,43 @@ namespace EHRIProcessor.Engine
 
         void loadOluRecords(string[] trainingEntries)
         {
+            int recordLine = 0;
             foreach (string trainingEntry in trainingEntries)
             {
-                EhriTraining record = new EhriTraining();
-                string[] data = trainingEntry.Split("~");
-                for (int i = 0; i < data.Length; i++)
+                try
                 {
+                    recordLine++;
+                    EhriTraining record = new EhriTraining();
+                    string[] data = trainingEntry.Split("~");
 
                     record.CreatedDate = DateTime.Now;
                     record.EmployeeFirstName = data[0];
                     record.EmployeeLastName = data[1];
-                    // //TODO: NEED TO ACCOUNT FOR MIDDLE NAME
                     record.EmailAddress = data[2];
                     record.TrainingPurpose = data[3];
                     record.TrainingSource = data[4];
-                    record.TrainingType = data[5];
+                    record.TrainingType = checkForNull(data[5],"Basic Training Area");
                     record.CourseTitle = data[6];
                     record.CourseStartDate = data[7];
                     record.CourseCompletionDate = data[8];
                     record.PersonId = data[9];
-                    record.TrainingDeliveryType = data[10];
-                    record.CreditDesignation = data[11];
-                    record.TrainingSubType = data[12];
-                    record.DutyHours = decimal.Parse(data[13]);
-                    record.NonDutyHours = decimal.Parse(data[14]);
-                    record.TrainingCredit = decimal.Parse(data[15]);
-                    record.VendorName = data[16];
-                    record.TrainingLocation = data[17];
-                    record.RepaymentAgreementReqd = data[18];
-                    record.ContServiceAgreementSigned = data[19];
-                    record.TutionAndFees = decimal.Parse(data[20]);
-                    record.TravelCosts = decimal.Parse(data[21]);
-                    record.NongovtContrCost = decimal.Parse(data[22]);
-                    record.MaterialCost = decimal.Parse(data[23]);
-                    record.PerdiemCost = decimal.Parse(data[24]);
-                    record.CreditType = data[25];
-                    record.AccreditationIndicator = data[26];
+                    record.TrainingDeliveryType = checkForNull(data[10],"Technology Based");
+                    record.CreditDesignation = checkForNull(data[11],"N/A");
+                    record.TrainingSubType = data[12]; //  checkForNull(data[12],"Agency Required Training");
+                    record.DutyHours = decimal.Parse(checkForNull(data[13],"1"));
+                    record.NonDutyHours =decimal.Parse(checkForNull(data[14],"0"));
+                    record.TrainingCredit = decimal.Parse(checkForNull(data[15],"1"));
+                    record.VendorName = checkForNull(data[16],"GSA OLU");
+                    record.TrainingLocation = checkForNull(data[17],"Online");
+                    record.RepaymentAgreementReqd = checkForNull(data[18],"N");
+                    record.ContServiceAgreementSigned =checkForNull(data[19],"NA") ;
+                    record.TutionAndFees = decimal.Parse(checkForNull(data[20],"0.0"));
+                    record.TravelCosts = decimal.Parse(checkForNull(data[21],"0.0"));
+                    record.NongovtContrCost = decimal.Parse(checkForNull(data[22],"0.0"));
+                    record.MaterialCost = decimal.Parse(checkForNull(data[23],"0.0"));
+                    record.PerdiemCost = decimal.Parse(checkForNull(data[24],"0.0"));
+                    record.CreditType = checkForNull(data[25],"");
+                    record.AccreditationIndicator = checkForNull(data[26],"N");
                     record.PriorKnowledgeLevel = data[27];
                     record.ImpactOnPerformance = data[28];
                     record.RecommendTrngToOthers = data[29];
@@ -101,10 +102,22 @@ namespace EHRIProcessor.Engine
                     record.TrainingTravelIndicator = data[33];
                     record.CourseType = data[34];
                     record.CourseId = data[35];
+                    OLURecords.Add(record);
                 }
-                OLURecords.Add(record);
+                catch(Exception x)
+                {
+                    Console.WriteLine("Error with record " + recordLine.ToString() + ":" + x.Message);
+                }
 
             }
+        }
+
+        private string checkForNull(string testvalue, string defaultValue)
+        {
+            string retval = defaultValue;
+            if(testvalue.Trim().Length>0)
+                retval = testvalue;
+            return retval;
         }
 
     }//end class

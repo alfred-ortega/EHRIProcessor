@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using EHRIProcessor.Engine;
 using EHRIProcessor.Model;
+using Newtonsoft.Json;
 
 namespace EHRIProcessor
 {

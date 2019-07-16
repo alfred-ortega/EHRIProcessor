@@ -5,11 +5,14 @@ using System;
 using System.Linq;
 using EHRIProcessor.Model;
 
+
+
 namespace EHRIProcessor.Engine
 {
     class Core
     {
-        IQueryable<EhriEmployee> Students;        
+        EmployeeDB employeeDb;
+     
         string[] trainingFiles;
         bool doEHRI;
         public Core()
@@ -25,8 +28,8 @@ namespace EHRIProcessor.Engine
             //if no files exist then just quit... else do the work
             if(filesExist)
             {
-                updateEmployees();
-                loadEmployees();
+                employeeDb = new EmployeeDB();
+                employeeDb.UpdateEmployeeData();
                 loadTrainingFiles();
                 if(doEHRI)
                 {
@@ -44,38 +47,12 @@ namespace EHRIProcessor.Engine
                 if(t)
                 {
                     doEHRI = true;
-                    break;
                 }
             }
-
             return trainingFiles.Length > 0;
         }
 
-#region "Employees"
-        void updateEmployees()
-        {
-            EmployeeDB db = new  EmployeeDB();
-            db.UpdateEmployeeData();
-        }
 
-        void loadEmployees()
-        {
-            using(OluContext db = new OluContext())
-            {
-
-                Students = db.EhriEmployee;
-                int i = Students.Count();
-                Console.WriteLine(i + "records");
-            }
-        }
-
-        EhriEmployee selectStudent(string employeeID)
-        {
-            return Students.Where(s => s.Emplid == employeeID).Single();
-        }
-
-
-#endregion
 
 #region "Training Records"
 
@@ -88,34 +65,13 @@ namespace EHRIProcessor.Engine
                 {
                     TrainingRecordLoader trainingRecordLoader = new TrainingRecordLoader();
                     trainingRecordLoader.Load(trainingFile);
-                    int i = mergeEmployeeTrainingData(trainingRecordLoader.OLURecords,fileTracker.FileID);
+                    DataMerger dataMerger = new DataMerger();
+                    int i = dataMerger.MergeEmployeeTrainingData(trainingRecordLoader.OLURecords,employeeDb.Employees,fileTracker.FileID);
                     fileTracker.UpdateCount(i);
                 }
             }
         }
-        int mergeEmployeeTrainingData(List<EhriTraining> trainingRecords, string fileId)
-        {
-            int i = 0;
-            OluContext db = new OluContext();
 
-            foreach(EhriTraining trainingrecord in trainingRecords)
-            {
-                EhriEmployee student = selectStudent(trainingrecord.PersonId);
-                trainingrecord.TrainingFileInfoId = fileId;
-                trainingrecord.EmployeeFirstName = student.FirstName;
-                trainingrecord.EmployeeMiddleName = student.MiddleName;
-                trainingrecord.EmployeeLastName = student.LastName;
-                trainingrecord.Ssn = student.Ssn;
-                trainingrecord.BirthDate = student.Birthdate;
-                trainingrecord.CheckIfValid();
-                db.EhriTraining.Add(trainingrecord);
-                i++;
-            }
-
-            db.SaveChanges();
-            Console.WriteLine(i + " records added");
-            return i;
-        }
 
         private void executeEHRIProcess(List<Model.EhriTraining> trainingRecords)
         {

@@ -44,14 +44,14 @@ namespace EHRIProcessor.Engine
             {
                 var trainingRecord = db.EhriTrainingfileinfo.FirstOrDefault(t => t.FileName == fileName);
                 
-                if(trainingRecord!=null)
+                if(trainingRecord==null)
                 {
-                    FileID = trainingRecord.TrainingFileInfoId;
-                    fileExists = true;
+                    fileExists = false;
                 }                     
                 else
                 {
-                    fileExists=false;
+                    FileID = trainingRecord.TrainingFileInfoId;
+                    fileExists=true;
                 }               
             }
         }
