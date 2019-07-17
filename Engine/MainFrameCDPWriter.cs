@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace EHRIProcessor.Engine
@@ -19,21 +20,29 @@ namespace EHRIProcessor.Engine
 
         }
 
-        public string Write(string[] filesToTransfer)
+        public void Write()
+        {
+            try
+            {
+                string[] filesToTransfer = Directory.GetFiles(Config.Settings.TransferDirectory);
+                string body = buildCopyFile(filesToTransfer);
+                File.WriteAllText(Config.Settings.TransferDirectory + Config.Settings.CopyFile,body);
+            }
+            catch (System.Exception x)
+            {
+                Console.WriteLine("Failed to write mainframe copy file.\r\n" + x.ToString());
+            }
+        }
+
+        private string buildCopyFile(string[] filesToTransfer)
         {
             foreach (string fileToTransfer in filesToTransfer)
             {
-                writeCopyInfo(fileToTransfer);
+                string tempFileName = fileToTransfer.Replace(Config.Settings.TransferDirectory,string.Empty);
+                createCopyInfo(tempFileName);
                 counter++;
             }
-            writeFooter();
-            return sb.ToString();
-        }
-
-        public string Write(string fileToTransfer)
-        {
-            writeCopyInfo(fileToTransfer);
-            writeFooter();
+            createFooter();
             return sb.ToString();
         }
 
@@ -41,10 +50,10 @@ namespace EHRIProcessor.Engine
         {
             sb = new StringBuilder();
             counter = 1;
-            writeHeader();
+            createHeader();
         }
 
-        void writeHeader()
+        void createHeader()
         {
             sb.AppendLine("/*BEGIN_REQUESTER_COMMENTS");
             sb.AppendLine("    $PNODE$=\"CD.WIN.GSAKFC\" $PNODE_OS$=\"Windows\"");
@@ -58,7 +67,7 @@ namespace EHRIProcessor.Engine
 
         }
 
-        void writeCopyInfo(string fileName)
+        void createCopyInfo(string fileName)
         {
             sb.AppendLine(string.Format("SEND{0} COPY",counter));
             sb.AppendLine("	FROM (");
@@ -73,7 +82,7 @@ namespace EHRIProcessor.Engine
 
         }
 
-        void writeFooter()
+        void createFooter()
         {
             sb.AppendLine("PEND");
         }

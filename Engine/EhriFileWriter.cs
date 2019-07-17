@@ -11,28 +11,60 @@ namespace EHRIProcessor.Engine
 {
     class EhriFileWriter
     {
+        EhriTransmissionfile transmissionFile;
+        string fileName;
+        XMLWriter xmlWriter;
 
         public EhriFileWriter()
         {
+            transmissionFile = new EhriTransmissionfile();
+            fileName = getFileName();
+            xmlWriter = new XMLWriter();
 
         }
 
         public void Write()
         {
-            OluContext oluContext = new OluContext();
-            List<EhriTraining> records = (from t in oluContext.EhriTraining
-                                         where t.ProcessStatus == "R" && t.LrnInterfaceOutId == null
-                                         select t).ToList();
+            Console.WriteLine("Preparing records for EHRI Transmission.");
+            int recordsToSendCount = 0;
+            using(OluContext oluContext = new OluContext())
+            {
+                List<EhriTraining> records = (from t in oluContext.EhriTraining
+                                            where t.ProcessStatus == "R"
+                                            select t).ToList();
+                recordsToSendCount = records.Count;
+                xmlWriter.WriteEhriFile(records,fileName);
+                foreach(EhriTraining record in records)
+                {
+                    record.TransmissionFileId = transmissionFile.TransmissionFileId;
+                    record.LastUpdatedDate = DateTime.Now;
+                    record.ProcessStatus = "S";
+                    oluContext.EhriTraining.Update(record);
+                }
+                oluContext.SaveChanges();
+            }
+            saveTransmissionInfo(recordsToSendCount);
+            Console.WriteLine("EHRI Transmission records updated.");
+        }
 
-            string fileName = getFileName();
 
-            XMLWriter xmlWriter = new XMLWriter();
-            xmlWriter.WriteEhriFile(records,fileName);
+
+        void saveTransmissionInfo(int recordCount)
+        {
+            using(OluContext oluContext = new OluContext())
+            {
+                transmissionFile.RecordCount = recordCount;
+                transmissionFile.SentToOpmdate = DateTime.Now;
+                oluContext.EhriTransmissionfile.Add(transmissionFile);
+                oluContext.SaveChanges();
+            }
+
         }
 
         private string getFileName()
         {
-            return Config.Settings.TransferDirectory +  "somefilenamehere.xml";
+
+            return Config.Settings.TransferDirectory + transmissionFile.FileName;
         }
 
     }//end class

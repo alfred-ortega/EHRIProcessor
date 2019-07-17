@@ -41,6 +41,8 @@ namespace EHRIProcessor.Engine
         /// </summary>
         public string HRLinksDB = string.Empty;
 
+        public string CopyFile = string.Empty;
+
         static Config()
         {}
 
@@ -56,6 +58,7 @@ namespace EHRIProcessor.Engine
             ArchiveDirectory = AppSettings.GetSection("AppSettings")["ArchiveDirectory"];
             OluDB = AppSettings.GetSection("AppSettings")["OluDB"];
             HRLinksDB = AppSettings.GetSection("AppSettings")["HRLinksDB"];
+            CopyFile = AppSettings.GetSection("AppSettings")["CopyFile"];
 
 
         }

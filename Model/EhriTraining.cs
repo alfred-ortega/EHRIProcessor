@@ -6,8 +6,8 @@ namespace EHRIProcessor.Model
     public partial class EhriTraining
     {
         public int EhriTrainingId { get; set; }
-        public string TrainingFileInfoId { get; set; }
-        public int? LrnInterfaceOutId { get; set; }
+        public string TrainingFileId { get; set; }
+        public string TransmissionFileId { get; set; }
         public string PersonId { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? LastUpdatedDate { get; set; }

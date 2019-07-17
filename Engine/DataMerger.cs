@@ -20,13 +20,10 @@ namespace EHRIProcessor.Engine
 
         }
 
-        public int MergeEmployeeTrainingData(List<EhriTraining> trainingRecords, List<EhriEmployee> employees, string fileId)
+        public void MergeEmployeeTrainingData(List<EhriTraining> trainingRecords, List<EhriEmployee> employees, string fileId)
         {
             Employees = employees;
             TrainingRecords = trainingRecords;            
-            int i = 0;
-            OluContext db = new OluContext();
-
             foreach(EhriTraining trainingrecord in trainingRecords)
             {
                 try
@@ -34,7 +31,7 @@ namespace EHRIProcessor.Engine
                     EhriEmployee student = selectEmployee(trainingrecord.PersonId);
                     if(student.Emplid != string.Empty)
                     {
-                        trainingrecord.TrainingFileInfoId = fileId;
+                        trainingrecord.TrainingFileId = fileId;
                         trainingrecord.EmployeeFirstName = student.FirstName;
                         trainingrecord.EmployeeMiddleName = student.MiddleName;
                         trainingrecord.EmployeeLastName = student.LastName;
@@ -50,16 +47,64 @@ namespace EHRIProcessor.Engine
                     trainingrecord.ErrorMessage = x.Message;
                     trainingrecord.ProcessStatus = "X";   
                 }
-                db.EhriTraining.Add(trainingrecord);
-                i++;
             }//end foreach
-            Console.WriteLine("Saving " + i + " records.");
-            db.SaveChanges();
-            Console.WriteLine(i + " records saved");
-            return i;
         }        
 
-        EhriEmployee selectEmployee(string employeeID)
+        public List<EhriTraining> RemoveDuplicateRecords(List<EhriTraining> records)
+        {
+            List<EhriTraining> returnRecords = new List<EhriTraining>();
+            int loopCount = 0;
+            int errorCount = 0;
+            Console.WriteLine(DateTime.Now.ToShortTimeString() + " Begin removing duplicate records");
+            using(OluContext db = new OluContext())
+            {
+                foreach(EhriTraining record in records)
+                {
+
+                    var count = (from t in db.EhriTraining
+                                 where t.Ssn == record.Ssn 
+                                 && t.CourseId == record.CourseId
+                                 && t.CourseCompletionDate == record.CourseCompletionDate
+                                 select t).Count();
+                    
+
+                    if(count > 0)
+                    {
+                        errorCount++;
+                    }
+                    else
+                    {
+                        returnRecords.Add(record);
+                    }
+                    
+
+                    loopCount++;
+                    if(loopCount % 100 == 0)                       
+                    {
+                        Console.WriteLine("Verified " + loopCount + " records.");
+                    } 
+                }
+            }
+            Console.WriteLine(DateTime.Now.ToShortTimeString() + " Completed removing duplicate records " + errorCount + " duplicates found.");
+            return returnRecords;
+        }
+
+        public void Save(List<EhriTraining> records)
+        {
+            using(OluContext context = new OluContext())
+            {
+                foreach(EhriTraining record in records)
+                {
+                    context.EhriTraining.Add(record);
+                }
+                context.SaveChangesAsync();
+            }
+        }
+
+
+
+
+        private EhriEmployee selectEmployee(string employeeID)
         {
             EhriEmployee emp = new EhriEmployee();
             try

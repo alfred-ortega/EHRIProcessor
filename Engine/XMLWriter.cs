@@ -52,7 +52,9 @@ namespace EHRIProcessor.Engine
                 sb.AppendLine(writeNode(record.CourseCompletionDate, "TrainingEndDate"));
 
                 sb.AppendLine("<ContinuedServiceAgreement>");
-                sb.AppendLine(writeNode(record.ContServiceAgreementSigned, "AgreementRequiredInd"));
+                sb.AppendLine(writeNode(record.RepaymentAgreementReqd, "AgreementRequiredInd"));
+//                sb.AppendLine(writeNode(record.ContServiceAgreementSigned, "ExpirationDate"));
+                sb.AppendLine(writeNode("", "ExpirationDate"));
                 sb.AppendLine("</ContinuedServiceAgreement>");
 
                 sb.AppendLine(writeNode(record.AccreditationIndicator, "AccreditationInd"));
@@ -95,6 +97,9 @@ namespace EHRIProcessor.Engine
 
         void writeFile(string path)
         {
+            if(File.Exists(path))
+                File.Delete(path);
+
             File.WriteAllText(path, sb.ToString());
         }
 

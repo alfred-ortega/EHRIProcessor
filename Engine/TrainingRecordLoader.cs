@@ -1,6 +1,7 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using EHRIProcessor.Model;
 
 namespace EHRIProcessor.Engine
@@ -23,7 +24,6 @@ namespace EHRIProcessor.Engine
                 string[] trainingEntries = File.ReadAllLines(trainingFile);
                 string[] cleanedLines = removeDoubleQuotes(trainingEntries);
                 loadOluRecords(cleanedLines);
-
             }
             catch(Exception x)
             {
@@ -73,8 +73,8 @@ namespace EHRIProcessor.Engine
                     record.TrainingSource = data[4];
                     record.TrainingType = checkForNull(data[5],"Basic Training Area");
                     record.CourseTitle = data[6];
-                    record.CourseStartDate = data[7];
-                    record.CourseCompletionDate = data[8];
+                    record.CourseStartDate = DateTime.Parse(data[7]).ToString("yyyy-MM-dd");
+                    record.CourseCompletionDate = DateTime.Parse(data[8]).ToString("yyyy-MM-dd");
                     record.PersonId = data[9];
                     record.TrainingDeliveryType = checkForNull(data[10],"Technology Based");
                     record.CreditDesignation = checkForNull(data[11],"N/A");
@@ -119,6 +119,8 @@ namespace EHRIProcessor.Engine
                 retval = testvalue;
             return retval;
         }
+
+
 
     }//end class
 }//end namespace

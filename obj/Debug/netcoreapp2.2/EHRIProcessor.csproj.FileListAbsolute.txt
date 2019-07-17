@@ -1,11 +1,11 @@
+D:\Users\AOrtega\source\repos\EHRIProcessor\obj\Debug\netcoreapp2.2\EHRIProcessor.csprojAssemblyReference.cache
+D:\Users\AOrtega\source\repos\EHRIProcessor\obj\Debug\netcoreapp2.2\EHRIProcessor.csproj.CoreCompileInputs.cache
+D:\Users\AOrtega\source\repos\EHRIProcessor\obj\Debug\netcoreapp2.2\EHRIProcessor.AssemblyInfoInputs.cache
+D:\Users\AOrtega\source\repos\EHRIProcessor\obj\Debug\netcoreapp2.2\EHRIProcessor.AssemblyInfo.cs
 D:\Users\AOrtega\source\repos\EHRIProcessor\bin\Debug\netcoreapp2.2\EHRIProcessor.deps.json
 D:\Users\AOrtega\source\repos\EHRIProcessor\bin\Debug\netcoreapp2.2\EHRIProcessor.runtimeconfig.json
 D:\Users\AOrtega\source\repos\EHRIProcessor\bin\Debug\netcoreapp2.2\EHRIProcessor.runtimeconfig.dev.json
 D:\Users\AOrtega\source\repos\EHRIProcessor\bin\Debug\netcoreapp2.2\EHRIProcessor.dll
 D:\Users\AOrtega\source\repos\EHRIProcessor\bin\Debug\netcoreapp2.2\EHRIProcessor.pdb
-D:\Users\AOrtega\source\repos\EHRIProcessor\obj\Debug\netcoreapp2.2\EHRIProcessor.csprojAssemblyReference.cache
-D:\Users\AOrtega\source\repos\EHRIProcessor\obj\Debug\netcoreapp2.2\EHRIProcessor.csproj.CoreCompileInputs.cache
-D:\Users\AOrtega\source\repos\EHRIProcessor\obj\Debug\netcoreapp2.2\EHRIProcessor.AssemblyInfoInputs.cache
-D:\Users\AOrtega\source\repos\EHRIProcessor\obj\Debug\netcoreapp2.2\EHRIProcessor.AssemblyInfo.cs
 D:\Users\AOrtega\source\repos\EHRIProcessor\obj\Debug\netcoreapp2.2\EHRIProcessor.dll
 D:\Users\AOrtega\source\repos\EHRIProcessor\obj\Debug\netcoreapp2.2\EHRIProcessor.pdb
