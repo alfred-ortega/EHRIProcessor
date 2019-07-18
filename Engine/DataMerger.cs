@@ -55,7 +55,6 @@ namespace EHRIProcessor.Engine
             List<EhriTraining> returnRecords = new List<EhriTraining>();
             int loopCount = 0;
             int errorCount = 0;
-            Console.WriteLine(DateTime.Now.ToShortTimeString() + " Begin removing duplicate records");
             using(OluContext db = new OluContext())
             {
                 foreach(EhriTraining record in records)
@@ -81,16 +80,17 @@ namespace EHRIProcessor.Engine
                     loopCount++;
                     if(loopCount % 100 == 0)                       
                     {
-                        Console.WriteLine("Verified " + loopCount + " records.");
+                        Console.WriteLine("Verified " + loopCount + " records");
                     } 
                 }
             }
-            Console.WriteLine(DateTime.Now.ToShortTimeString() + " Completed removing duplicate records " + errorCount + " duplicates found.");
+            Logger.Log.Record("Completed removing duplicate records " + errorCount + " duplicates found");
             return returnRecords;
         }
 
         public void Save(List<EhriTraining> records)
         {
+            Logger.Log.Record("Saving " + records.Count + " records");
             using(OluContext context = new OluContext())
             {
                 foreach(EhriTraining record in records)
@@ -99,6 +99,7 @@ namespace EHRIProcessor.Engine
                 }
                 context.SaveChangesAsync();
             }
+            Logger.Log.Record("Saving completed");
         }
 
 

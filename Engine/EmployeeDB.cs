@@ -24,9 +24,9 @@ namespace EHRIProcessor.Engine
             string[] commands ={"EHRI_InsertEmployees","EHRI_UpdateEmployees","EHRI_DeleteEmployees"};
             foreach(string command in commands)
             {
-                Console.WriteLine(DateTime.Now.ToLongTimeString() +  " begin running " + command);
+                Logger.Log.Record("Begin running " + command);
                 Database.RunCommand(command);
-                Console.WriteLine(DateTime.Now.ToLongTimeString() + " completed running of " + command);
+                Logger.Log.Record("Completed running of " + command);
             }
             loadEmployees();
         }
@@ -38,7 +38,7 @@ namespace EHRIProcessor.Engine
 
                 Employees = db.EhriEmployee.ToList();
                 int i = Employees.Count();
-                Console.WriteLine(i + " employees loaded");
+                Logger.Log.Record(i + " employees loaded");
             }
         }
         public EhriEmployee SelectEmployee(string employeeID)
@@ -49,13 +49,17 @@ namespace EHRIProcessor.Engine
                 emp = Employees.Where(s => s.Emplid == employeeID).SingleOrDefault();
                 if(emp.Emplid == string.Empty)
                 {
-                   throw new Exception("Employee " + employeeID + " not found.");
+                   Logger.Log.Record(LogType.Error, "Employee " + employeeID + " not found.");
                 }
                 
             }
+            catch(NullReferenceException)
+            {
+                Logger.Log.Record(LogType.Error, "Employee " + employeeID + " not found.");
+            }
             catch(Exception x)
             {
-                throw x;
+                Logger.Log.Record(LogType.Error, x.ToString());
             }
             return emp;
         }

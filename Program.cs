@@ -13,16 +13,15 @@ namespace EHRIProcessor
         {
             try
             {
-               Core core = new Core();
-               core.Execute();
+                Logger.Log.Record("Beginning daily run.");
+                Core core = new Core();
+                core.Execute();
+                Logger.Log.Record("End daily run.");
             }   
             catch(Exception x)
             {
-                Console.WriteLine(x.ToString());
+                Logger.Log.Record(LogType.Error, x.ToString());
             }      
         }
-
-
-
     }
 }

@@ -23,6 +23,8 @@ namespace EHRIProcessor.Engine
 
         public void Execute()
         {
+            Logger.Log.Record("Beging Core.Execute");
+
             bool filesExist = checkForTrainingFile();
 
             //if no files exist then just quit... else do the work
@@ -33,10 +35,18 @@ namespace EHRIProcessor.Engine
                 loadTrainingFiles();
                 if(doEHRI)
                 {
+                    Logger.Log.Record("Beginning EHRI TransferFile Creation Process.");
                     executeEHRIProcess();           
+                    Logger.Log.Record("Completed EHRI TranferFile Creation Process.");
                 }
             }
+            else
+            {
+                Logger.Log.Record("No files to process found.");
+            }
+            Logger.Log.Record("Beginning File Archive Process.");
             archiveTrainingFiles();
+            Logger.Log.Record("Completed File Archive Process.");
             Console.WriteLine("Done");
         }
         private bool checkForTrainingFile()
@@ -47,6 +57,7 @@ namespace EHRIProcessor.Engine
                 bool t = trainingFile.Contains("monthly");
                 if(t)
                 {
+                    Logger.Log.Record("Monthly Training File Found: " + trainingFile);
                     doEHRI = true;
                 }
             }
@@ -63,9 +74,13 @@ namespace EHRIProcessor.Engine
                 string dateStamp = "_" + DateTime.Now.ToString("yyyMMdd") + ".csv";
                 newFileName = newFileName.Replace(".csv",dateStamp);
                 if(File.Exists(newFileName))
+                {
                     File.Delete(newFileName);
+                    Logger.Log.Record("Previous version of archive file " + newFileName + " deleted.");
 
+                }
                 File.Move(file,newFileName);
+                Logger.Log.Record("Archive file " + newFileName + " created.");
             }
         }
 
@@ -75,30 +90,45 @@ namespace EHRIProcessor.Engine
 
         private void loadTrainingFiles()
         {
+            Logger.Log.Record("Begin Load Training File Process");
+            Logger.Log.Record("Training Files to load: " + trainingFiles.Length.ToString());
             foreach(string trainingFile in trainingFiles)
             {
+                Logger.Log.Record("Checking if '" + trainingFile + "' previously processed");
                 FileTracker fileTracker = new FileTracker(trainingFile); 
                 if(!fileTracker.FileExists)
                 {
                     TrainingRecordLoader trainingRecordLoader = new TrainingRecordLoader();
+                    Logger.Log.Record("Loading " + trainingFile);
                     trainingRecordLoader.Load(trainingFile);
                     DataMerger dataMerger = new DataMerger();
+                    Logger.Log.Record("Merging training records with employee records");
                     dataMerger.MergeEmployeeTrainingData(trainingRecordLoader.OLURecords,employeeDb.Employees,fileTracker.FileID);
+                    Logger.Log.Record("Removing duplicate training records");
                     trainingRecordLoader.OLURecords = dataMerger.RemoveDuplicateRecords(trainingRecordLoader.OLURecords);
+                    Logger.Log.Record("Saving merged records");
                     dataMerger.Save(trainingRecordLoader.OLURecords);
+                    Logger.Log.Record("Updating saved record count on file tracker");
                     fileTracker.UpdateCount(trainingRecordLoader.OLURecords.Count);
                 }
+                {
+                    Logger.Log.Record("File '" + trainingFile + "' already processed" );
+                }
             }
+            Logger.Log.Record("Completed Load Training File process");
         }
 
 
         private void executeEHRIProcess()
         {
+            Logger.Log.Record("Begin writing EHRI File");
             EhriFileWriter writer = new EhriFileWriter();
             writer.Write();
-
+            Logger.Log.Record("Completed writing of EHRI File");
+            Logger.Log.Record("Begin writing of MainFrame Copy File");
             MainFrameCDPWriter mfWriter = new MainFrameCDPWriter();
             mfWriter.Write();
+            Logger.Log.Record("Completed writing of MainFrame Copy File");
         }
 #endregion
 

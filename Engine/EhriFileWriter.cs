@@ -25,7 +25,7 @@ namespace EHRIProcessor.Engine
 
         public void Write()
         {
-            Console.WriteLine("Preparing records for EHRI Transmission.");
+            Logger.Log.Record("Preparing records for EHRI Transmission");
             int recordsToSendCount = 0;
             using(OluContext oluContext = new OluContext())
             {
@@ -44,7 +44,7 @@ namespace EHRIProcessor.Engine
                 oluContext.SaveChanges();
             }
             saveTransmissionInfo(recordsToSendCount);
-            Console.WriteLine("EHRI Transmission records updated.");
+            Logger.Log.Record("EHRI Transmission records updated");
         }
 
 
@@ -63,7 +63,6 @@ namespace EHRIProcessor.Engine
 
         private string getFileName()
         {
-
             return Config.Settings.TransferDirectory + transmissionFile.FileName;
         }
 

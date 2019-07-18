@@ -32,6 +32,10 @@ namespace EHRIProcessor.Engine
         /// The archive directory is where the training files that have been parsed and stored will be saved.
         /// </summary>
         public string ArchiveDirectory = string.Empty;
+         /// <summary>
+         /// The Log directory is where the application logs will written out.
+         /// </summary>
+         public string LogDirectory = string.Empty;
         /// <summary>
         /// The connection string for the OLU schema in the MySQL database.
         /// </summary>
@@ -48,6 +52,7 @@ namespace EHRIProcessor.Engine
 
         private Config()
         {
+
             var builder = new ConfigurationBuilder()
                              .SetBasePath(Directory.GetCurrentDirectory())
                              .AddJsonFile("appsettings.json");
@@ -56,10 +61,11 @@ namespace EHRIProcessor.Engine
             BaseDirectory = AppSettings.GetSection("AppSettings")["BaseDirectory"];
             TransferDirectory = AppSettings.GetSection("AppSettings")["TransferDirectory"];
             ArchiveDirectory = AppSettings.GetSection("AppSettings")["ArchiveDirectory"];
+            LogDirectory = AppSettings.GetSection("AppSettings")["LogDirectory"];
             OluDB = AppSettings.GetSection("AppSettings")["OluDB"];
             HRLinksDB = AppSettings.GetSection("AppSettings")["HRLinksDB"];
             CopyFile = AppSettings.GetSection("AppSettings")["CopyFile"];
-
+            Logger.Log.Record("Configuration Settings Loaded");
 
         }
     }//end class

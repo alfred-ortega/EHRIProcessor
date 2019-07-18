@@ -27,7 +27,7 @@ namespace EHRIProcessor.Engine
             }
             catch(Exception x)
             {
-                Console.WriteLine(x.ToString());
+                Logger.Log.Record(LogType.Error,  x.ToString());
             }
         }
 
@@ -106,7 +106,7 @@ namespace EHRIProcessor.Engine
                 }
                 catch(Exception x)
                 {
-                    Console.WriteLine("Error with record " + recordLine.ToString() + ":" + x.Message);
+                    Logger.Log.Record(LogType.Error, "Error with record " + recordLine.ToString() + ":" + x.Message);
                 }
 
             }

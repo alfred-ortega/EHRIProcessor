@@ -30,7 +30,7 @@ namespace EHRIProcessor.Engine
             }
             catch (System.Exception x)
             {
-                Console.WriteLine("Failed to write mainframe copy file.\r\n" + x.ToString());
+                Logger.Log.Record(LogType.Error, "Failed to write mainframe copy file\r\n" + x.ToString());
             }
         }
 
