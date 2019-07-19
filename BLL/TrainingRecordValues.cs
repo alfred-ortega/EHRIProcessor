@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using EHRIProcessor.Engine;
 using Newtonsoft.Json;
 
 namespace EHRIProcessor.Model
@@ -35,7 +36,7 @@ namespace EHRIProcessor.Model
 
         private void loadPrimaryDictionary()
         {
-            json = File.ReadAllText(Directory.GetCurrentDirectory() + "\\ehricodes.json");
+            json = File.ReadAllText(Config.Settings.ConfigDirectory + "\\ehricodes.json");
             ehriDictionary = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string,string>>>(json);
         }
 

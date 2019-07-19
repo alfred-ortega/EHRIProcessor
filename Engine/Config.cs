@@ -36,6 +36,11 @@ namespace EHRIProcessor.Engine
          /// The Log directory is where the application logs will written out.
          /// </summary>
          public string LogDirectory = string.Empty;
+
+        /// <summary>
+        /// The config directory is where the ehri value config is stored
+        /// </summary>
+         public string ConfigDirectory = string.Empty;
         /// <summary>
         /// The connection string for the OLU schema in the MySQL database.
         /// </summary>
