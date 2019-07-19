@@ -17,6 +17,7 @@ namespace EHRIProcessor.Model
         public string EmployeeFirstName { get; set; }
         public string EmployeeMiddleName { get; set; }
         public string EmailAddress { get; set; }
+        public string AgencySubElement { get; set; }
         public string TrainingPurpose { get; set; }
         public string TrainingSource { get; set; }
         public string TrainingType { get; set; }

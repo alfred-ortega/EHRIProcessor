@@ -38,7 +38,7 @@ namespace EHRIProcessor.Engine
             else
             {
                 lType = "Status";
-                System.Console.WriteLine(entry);
+                System.Console.WriteLine(ts + " " + entry);
             }
             string message = string.Format("{0}\t{1}\t{2}",ts,lType,entry);
             using(StreamWriter streamWriter = new StreamWriter(logFileName,true))

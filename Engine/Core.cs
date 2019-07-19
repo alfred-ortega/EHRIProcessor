@@ -44,9 +44,6 @@ namespace EHRIProcessor.Engine
             {
                 Logger.Log.Record("No files to process found.");
             }
-            Logger.Log.Record("Beginning File Archive Process.");
-            archiveTrainingFiles();
-            Logger.Log.Record("Completed File Archive Process.");
             Console.WriteLine("Done");
         }
         private bool checkForTrainingFile()
@@ -115,6 +112,9 @@ namespace EHRIProcessor.Engine
                     Logger.Log.Record("File '" + trainingFile + "' already processed" );
                 }
             }
+            Logger.Log.Record("Beginning File Archive Process.");
+            archiveTrainingFiles();
+            Logger.Log.Record("Completed File Archive Process.");            
             Logger.Log.Record("Completed Load Training File process");
         }
 

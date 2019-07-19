@@ -42,7 +42,7 @@ namespace EHRIProcessor.Engine
                 sb.AppendLine(writeNode(record.Ssn, "SSN"));
                 sb.AppendLine(writeNode(record.BirthDate.ToString(dateFormat), "BirthDate"));
                 sb.AppendLine(writeNode(string.Empty, "EHRIEmployeeId"));
-                //sb.AppendLine(writeNode(record.AgencySubElement, "AgencySubelement"));
+                sb.AppendLine(writeNode(record.AgencySubElement, "AgencySubelement"));
                 sb.AppendLine("</Employee>");
 
                 sb.AppendLine(writeNode(record.CourseTitle,"TrainingTitle"));

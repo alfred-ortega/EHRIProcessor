@@ -78,10 +78,10 @@ namespace EHRIProcessor.Engine
                     record.PersonId = data[9];
                     record.TrainingDeliveryType = checkForNull(data[10],"Technology Based");
                     record.CreditDesignation = checkForNull(data[11],"N/A");
-                    record.TrainingSubType = data[12]; //  checkForNull(data[12],"Agency Required Training");
+                    record.TrainingSubType = checkForNull(data[12],"Agency Required Training");
                     record.DutyHours = decimal.Parse(checkForNull(data[13],"1"));
                     record.NonDutyHours =decimal.Parse(checkForNull(data[14],"0"));
-                    record.TrainingCredit = decimal.Parse(checkForNull(data[15],"1"));
+                    record.TrainingCredit = decimal.Parse(checkForNull(data[15],"0"));
                     record.VendorName = checkForNull(data[16],"GSA OLU");
                     record.TrainingLocation = checkForNull(data[17],"Online");
                     record.RepaymentAgreementReqd = checkForNull(data[18],"N");

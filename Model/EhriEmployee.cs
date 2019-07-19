@@ -11,6 +11,7 @@ namespace EHRIProcessor.Model
         public string MiddleName { get; set; }
         public DateTime Birthdate { get; set; }
         public string Ssn { get; set; }
+        public string AgencySubElement { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }

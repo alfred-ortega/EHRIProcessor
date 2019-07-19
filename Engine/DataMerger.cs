@@ -37,6 +37,7 @@ namespace EHRIProcessor.Engine
                         trainingrecord.EmployeeLastName = student.LastName;
                         trainingrecord.Ssn = student.Ssn;
                         trainingrecord.BirthDate = student.Birthdate;
+                        trainingrecord.AgencySubElement = student.AgencySubElement;
                         trainingrecord.CheckIfValid();
                     }
                 }

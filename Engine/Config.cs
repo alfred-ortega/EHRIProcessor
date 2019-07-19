@@ -65,7 +65,6 @@ namespace EHRIProcessor.Engine
             OluDB = AppSettings.GetSection("AppSettings")["OluDB"];
             HRLinksDB = AppSettings.GetSection("AppSettings")["HRLinksDB"];
             CopyFile = AppSettings.GetSection("AppSettings")["CopyFile"];
-            Logger.Log.Record("Configuration Settings Loaded");
 
         }
     }//end class

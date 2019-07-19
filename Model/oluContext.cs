@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using EHRIProcessor.Engine;
-
 namespace EHRIProcessor.Model
 {
     public partial class OluContext : DbContext
@@ -45,6 +44,10 @@ namespace EHRIProcessor.Model
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
+                entity.Property(e => e.AgencySubElement)
+                    .HasMaxLength(5)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Birthdate)
                     .HasColumnName("birthdate")
                     .HasColumnType("date");
@@ -79,10 +82,6 @@ namespace EHRIProcessor.Model
             {
                 entity.ToTable("ehri_training", "olu");
 
-                entity.HasIndex(e => new { e.Ssn, e.CourseId, e.CourseCompletionDate })
-                    .HasName("constraint_name")
-                    .IsUnique();
-
                 entity.Property(e => e.EhriTrainingId)
                     .HasColumnName("ehri_training_id")
                     .HasColumnType("int(10)");
@@ -90,6 +89,10 @@ namespace EHRIProcessor.Model
                 entity.Property(e => e.AccreditationIndicator)
                     .HasColumnName("ACCREDITATION_INDICATOR")
                     .HasMaxLength(80)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AgencySubElement)
+                    .HasMaxLength(5)
                     .IsUnicode(false);
 
                 entity.Property(e => e.BirthDate)
