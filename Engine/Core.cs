@@ -108,6 +108,7 @@ namespace EHRIProcessor.Engine
                     Logger.Log.Record("Updating saved record count on file tracker");
                     fileTracker.UpdateCount(trainingRecordLoader.OLURecords.Count);
                 }
+                else
                 {
                     Logger.Log.Record("File '" + trainingFile + "' already processed" );
                 }
